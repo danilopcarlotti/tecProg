@@ -120,13 +120,13 @@ void exec_maquina(Maquina *m, int n) {
       }
       break;
     case CALL:
-      empilha(rbp, exec->topo);
+      empilha(rbp, exec->topo); // empilha em rbp a posição que o endereço de retorno esta
       empilha(exec, ip);
       ip = arg;
       continue;
     case RET:
       ip = desempilha(exec);
-      desempilha(rbp);
+      desempilha(rbp); // ajusta o rbp para a função anterior
       break;
     case EQ:
       if (desempilha(pil) == desempilha(pil))
@@ -176,23 +176,16 @@ void exec_maquina(Maquina *m, int n) {
       printf("%d\n", desempilha(pil));
       break;
     case RCE:
-      //TODO RCE
-      empilha(pil, exec->val[rbp->val[rbp->topo - 1] + arg]);
+      empilha(pil, exec->val[rbp->val[rbp->topo - 1] + arg]);  // empilha o valor da variavel local
       break;
     case STL:
-      //TODO STL
-      exec->val[rbp->val[rbp->topo - 1] + arg] = desempilha(pil);
+      exec->val[rbp->val[rbp->topo - 1] + arg] = desempilha(pil); 
       break;
     case ALC:
-      //TODO ALC
-      if (rbp->val[rbp->topo - 1] + arg < 100) exec->topo = exec->topo + arg;
-      else {
-        return;
-      }
+      exec->topo = exec->topo + arg; // movimenta o topo da pilha de exec para aloca memoria
       break;
     case FRE:
-      //TODO FREE
-      exec->topo = rbp->val[rbp->topo - 1] + 1;
+      exec->topo = rbp->val[rbp->topo - 1] + 1; // ajusta o topo da pilha de exec para desaloca memoria
       break;
     }
     D(imprime(pil,5));
