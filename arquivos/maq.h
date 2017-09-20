@@ -5,6 +5,7 @@
 typedef struct {
   Pilha pil;
   Pilha exec;
+  Pilha rbp;
   OPERANDO Mem[MAXMEM];
   INSTR *prog;
   int ip;
