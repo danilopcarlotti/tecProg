@@ -1,4 +1,5 @@
 #include "pilha.h"
+#include "maq.h"
 #include <stdbool.h>
 
 typedef struct {
@@ -13,8 +14,9 @@ typedef struct {
 typedef struct {
 	Celula ** tabuleiro;
 	int ** bases;
-	int quantidadeDeExercitos;
-	int ** exercitos;
+	//int quantidadeDeExercitos;
+	//int ** exercitos;
+	Maquina *robos;
 	int unidadesTempo; // a cada jogada, passa-se uma unidade de tempo
 	int quantidadeDeRobos;
 } Arena;
@@ -28,3 +30,9 @@ void escolheBaseArena(int Exercito, int * base,Arena * are);
 void posicionaExercito(int Exercito,Arena * are);
 
 int numeroAleatorio(int limite);
+
+void Atualiza(Arena *are);
+
+void InsereExercito(Maquina *m);
+
+void RemoveExercito(Maquina *m);

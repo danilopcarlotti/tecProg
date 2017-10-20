@@ -48,12 +48,27 @@ void posicionaExercito(int Exercito,Arena * are){
 
 void inicializaArena(Arena * are){
 	are->tabuleiro = malloc(TAMANHOARENA * sizeof(Celula *));
-	are->quantidadeDeExercitos = QUANTIDADE;
-	are->quantidadeDeRobos = QUANTIDADE/3;
+	//are->quantidadeDeExercitos = QUANTIDADE;
+	are->quantidadeDeRobos = 0;
+	are->robos = malloc(100 * sizeof(Maquina));
+	are->unidadesTempo = 0;
 	inicializaMatriz(are->tabuleiro);
-	are->exercitos = malloc(are->quantidadeDeRobos * 2 * sizeof(int *));
-	for (int i = 0; i < (are->quantidadeDeExercitos); ++i)
+	//are->exercitos = malloc(are->quantidadeDeRobos * 2 * sizeof(int *));
+	/*for (int i = 0; i < (are->quantidadeDeExercitos); ++i)
 	{
 		posicionaExercito(i,are);
+	}*/
+}
+
+void InsereExercito(Maquina *m, Arena *are) {
+	are->robos[quantidadeDeRobos] = m;
+	are->quantidadeDeRobos++;
+}
+
+void Atualiza(Arena *are){
+	int i = 0;
+	while(are->robos[i] != NULL){
+		exec_maquina(are->robos[i], 50);
 	}
+	are->unidadesTempo++;
 }
