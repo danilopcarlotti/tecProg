@@ -9,6 +9,8 @@ typedef struct {
   OPERANDO Mem[MAXMEM];
   INSTR *prog;
   int ip;
+  int pos[2]; // posição na arena
+  int cristais; // quantidade de cristais
 } Maquina;
 
 Maquina *cria_maquina(INSTR *p);
