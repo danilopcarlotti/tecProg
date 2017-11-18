@@ -4,14 +4,6 @@
 #include "arena.h"
 #define TAMANHOARENA 6
 
-int main(int argc, char const *argv[])
-{
-	Arena * are;
-	are = malloc(sizeof(Arena));
-	inicializaArena(are);
-	return 0;
-}
-
 void inicializaMatriz(Celula ** matriz)
 {
 	for (int i = 0; i < TAMANHOARENA; ++i)
@@ -37,32 +29,103 @@ int numeroAleatorio(int limite)
 	return rand() % limite;
 }
 
-void escolheBaseArena(int Exercito, int * base)
+void escolheBaseArena(int exercito, Arena *are)
 {
-	base[0] = numeroAleatorio(TAMANHOARENA);
-	base[1] = numeroAleatorio(TAMANHOARENA);
+	int x, y;
+	x = numeroAleatorio(TAMANHOARENA);
+	y = numeroAleatorio(TAMANHOARENA);
+	if (are->tabuleiro[x][y].baseExercito < 0){
+		are->tabuleiro[x][y].baseExercito = exercito;
+		are->bases[exercito].x = x;
+		are->bases[exercito].y = y;
+	}
 }
 
 void inicializaArena(Arena * are)
 {
 	are->tabuleiro = malloc(TAMANHOARENA * sizeof(Celula *));
 	are->quantidadeDeRobos = 0;
-	are->robos = malloc(100 * sizeof(Maquina));
+	are->robos = malloc(100 * sizeof(Maquina *));
+	int i = 0;
 	are->unidadesTempo = 0;
+	are->bases = malloc(6 * sizeof(Base));
+	are->quantidadeDeExercitos = 0;
 	inicializaMatriz(are->tabuleiro);
 }
 
-void InsereExercito(Maquina *m, Arena *are)
+void InsereRobo(Arena *are, Maquina *m)
 {
-	are->robos[quantidadeDeRobos] = m;
+	are->robos[are->quantidadeDeRobos] = m;
 	are->quantidadeDeRobos++;
+}
+
+void InsereExercito(Arena *are) 
+{
+	if (are->quantidadeDeExercitos < 5){
+		escolheBaseArena(are->quantidadeDeExercitos, are);
+		are->quantidadeDeExercitos++;
+	}
 }
 
 void Atualiza(Arena *are)
 {
 	int i = 0;
-	while(are->robos[i] != NULL){
+	while(i <= are->quantidadeDeRobos){
 		exec_maquina(are->robos[i], 50); // percorre o vetor de maquinas e executa 50 instruçoes
 	}
 	are->unidadesTempo++; // atualiza a contagem do tempo
+}
+
+void Sistema(Maquina *m, AC acao, int op){
+	int x,y;
+	switch(op){
+		case 0:
+			x = -1;
+			y = -1;
+			break;
+		case 1:
+			x = -1;
+			y = 0;
+			break;
+		case 2:
+			x = -1;
+			y = 1;
+			break;
+		case 3:
+			x = 0;
+			y = 1;
+			break;
+		case 4:
+			x = -1;
+			y = 0;
+			break;
+		case 5:
+			x = 0;
+			y = -1;
+			break;
+	}
+	x = m->pos[0] + x;
+	y = m->pos[1] + y;
+
+	switch(acao){
+		case MOVER:
+			if (!arena->tabuleiro[x][y].ocupado){
+				arena->tabuleiro[m->pos[0]][m->pos[1]].ocupado = false;
+				m->pos[0] = x;
+				m->pos[1] = y;
+				arena->tabuleiro[x][y].ocupado = true;
+				arena->tabuleiro[x][y].robo = m;
+			}
+			break;
+		case COLETAR:
+			if (arena->tabuleiro[x][y].quantidadeDeCristais > 0){
+				m->cristais++;
+				arena->tabuleiro[x][y].quantidadeDeCristais--;
+			}
+			break;
+		case ATACAR:
+
+			break;
+	}
+
 }

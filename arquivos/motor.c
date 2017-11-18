@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "maq.h"
+#include "arena.h"
 
 INSTR programa[] = {
   {PUSH, 3},
@@ -72,9 +72,9 @@ INSTR fat[] = {
 
 
 int main(int ac, char **av) {
-  Maquina *maq = cria_maquina(programa);
-  Maquina *maq2 = cria_maquina(fibonacci);
-  Maquina *maq3 = cria_maquina(fat);
+  Maquina *maq = cria_maquina(programa, 0);
+  Maquina *maq2 = cria_maquina(fibonacci, 1);
+  Maquina *maq3 = cria_maquina(fat, 2);
   exec_maquina(maq, 3);
   exec_maquina(maq2, 40);
   puts("---");
@@ -85,5 +85,17 @@ int main(int ac, char **av) {
   exec_maquina(maq3, 100000);
   destroi_maquina(maq);
   destroi_maquina(maq2);
+
+/*  inicializaArena(arena);
+  int i = 0;
+  while(i < 3){
+    insereExercito(arena);
+    i++;
+  }
+  insereRobo(maq, arena);
+  insereRobo(maq2, arena);
+  insereRobo(maq3, arena);
+  Atualiza(arena);
+*/
   return 0;
 }
