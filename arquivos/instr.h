@@ -31,7 +31,7 @@ typedef enum {
   ATR,
   MOV,
   ATQ,
-  COL
+  COL,
   SIS
 } OpCode;
 
