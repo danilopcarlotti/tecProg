@@ -295,14 +295,20 @@ void exec_maquina(Maquina *m, int n) {
   }
 }
 
-Vizinhanca cria_vizinhanca(int x, int y)
+Vizinhanca * cria_vizinhanca(int x, int y)
 {
 	Vizinhanca *v = (Vizinhanca*)malloc(sizeof(Vizinhanca));
-	v->pos1 = {(x-1)%6, y};
-	v->pos2 = {(x-1)%6, (y+1)%};
-	v->pos3 = {x, (y+1)%6};
-	v->pos4 = {(x-1)%6, y};
-	v->pos5 = {x, (y-1)%6};
-	v->pos6 = {(x-1)%6, (y-1)%6}
+	v->pos1[0] = (x-1)%6;
+  v->pos1[1] = y;
+	v->pos2[0] = (x-1)%6;
+  v->pos2[1] = (y+1)%6;
+	v->pos3[0] = x;
+  v->pos3[1] = (y+1)%6;
+	v->pos4[0] = (x-1)%6;
+  v->pos4[1] = y;
+	v->pos5[0] = x;
+  v->pos5[1] = (y-1)%6;
+	v->pos6[0] = (x-1)%6;
+  v->pos6[0] = (y-1)%6;
 	return v;
 }

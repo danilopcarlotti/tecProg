@@ -4,6 +4,26 @@
 #include "arena.h"
 #define TAMANHOARENA 6
 
+void insereCristais(int n, int x, int y, Arena *are)
+{
+	are->tabuleiro[x][y].quantidadeDeCristais = n;
+}
+
+void mostra_terreno(FILE *display, Celula * cell) {
+  fprintf(display, "%d %d %d \n",
+		  cell -> tipoTerreno,cell -> pos[0],cell -> pos[1]);
+}
+
+void mostra_robo(Maquina *m) {
+  fprintf(display, "%d %d %d \n",
+		  m -> exercito, m -> pos[0], m -> pos[1]);
+}
+
+void mostra_cristais(int x, int y) {
+  fprintf(display, "%d %d %d \n",
+		  99, x, y);
+}
+
 void inicializaMatriz(Celula ** matriz)
 {
 	for (int i = 0; i < TAMANHOARENA; ++i)
@@ -16,6 +36,7 @@ void inicializaMatriz(Celula ** matriz)
 			cell[j].pos[0] = i;
 			cell[j].pos[1] = j;
 			cell[j].tipoTerreno = numeroAleatorio(1); // 0 - terreno plano e 1 - terreno rugoso;
+			mostra_terreno(display, cell);
 			cell[j].quantidadeDeCristais = 0;
 			cell[j].baseExercito = -1;
 			cell[j].ocupado = false;
@@ -56,8 +77,9 @@ void inicializaArena(Arena * are)
 		for (int j = 0; j < TAMANHOARENA; ++j)
 		{
 			insereCristais(numeroAleatorio(4), i, j, are);
+			mostra_cristais(i, j);
 		}
-	]
+	}
 }
 
 void InsereRobo(Arena *are, Maquina *m)
@@ -128,6 +150,7 @@ void Sistema(Maquina *m, AC acao, int op){
 				m->pos[1] = y;
 				arena->tabuleiro[x][y].ocupado = true;
 				arena->tabuleiro[x][y].robo = m;
+				mostra_robo(m);
 			}
 			break;
 		case COLETAR:
@@ -135,15 +158,12 @@ void Sistema(Maquina *m, AC acao, int op){
 				m->cristais++;
 				arena->tabuleiro[x][y].quantidadeDeCristais--;
 			}
+			// posteriormente, inserir uma checagem para saber se a arena ficou sem cristais
+			// e criar um png específico para isso
 			break;
 		case ATACAR:
 
 			break;
 	}
 
-}
-
-void insereCristais(int n, int x, int y, Arena *are)
-{
-	are->tabuleiro[x][y].quantidadeDeCristais = n;
 }

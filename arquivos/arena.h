@@ -25,6 +25,7 @@ typedef struct {
 } Arena;
 
 Arena *arena;
+FILE *display;
 
 void inicializaArena(Arena * are);
 
@@ -43,3 +44,9 @@ void InsereExercito(Arena *are);
 void RemoveExercito(Maquina *m);
 
 void insereCristais(int n, int x, int y, Arena *are);
+
+void mostra_terreno(FILE *display, Celula * cell);
+
+void mostra_robo(Maquina *m);
+
+void mostra_cristais(int x, int y);

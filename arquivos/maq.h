@@ -3,6 +3,15 @@
 #define MAXMEM 100
 
 typedef struct {
+  int pos1[2];
+  int pos2[2];
+  int pos3[2];
+  int pos4[2];
+  int pos5[2];
+  int pos6[2];
+} Vizinhanca;
+
+typedef struct {
   Pilha pil;
   Pilha exec;
   Pilha rbp;
@@ -13,18 +22,9 @@ typedef struct {
   int exercito; //qual exercito pertence
   int cristais; // quantidade de cristais
   int saude;
-  Vizinhanca v;
-  int ocupacao
+  Vizinhanca * v;
+  int ocupacao;
 } Maquina;
-
-typedef struct {
-  int pos1[2];
-  int pos2[2];
-  int pos3[2];
-  int pos4[2];
-  int pos5[2];
-  int pos6[2]
-} Vizinhanca
 
 Maquina *cria_maquina(INSTR *p, int exercito, int x, int y);
 

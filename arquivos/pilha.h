@@ -1,5 +1,5 @@
+#include <stdio.h>
 #include "instr.h"
-
 #define PILMAX 99
 
 typedef struct {

@@ -31,8 +31,7 @@ typedef enum {
   ATR,
   MOV,
   ATQ,
-  COL,
-  SIS
+  COL
 } OpCode;
 
 /* Tipos dos operandos */
@@ -48,5 +47,36 @@ typedef enum {
  typedef struct { 
    Tipo t; 
    union {
- 	int n; 
- 	int ac;
+  int n; 
+  int ac;
+  int v; 
+   } val;
+} OPERANDO;
+
+/*terreno*/
+typedef enum {
+  ESTRADA,
+  MONTANHA,
+  RIO,
+  BASE
+} Terreno;
+
+/*Celula
+typedef struct {
+  Terreno terreno;
+  short int cristais;
+  short int ocupado;
+} Celula;*/
+
+/* Instrução */
+typedef struct {
+  OpCode instr;
+  OPERANDO op;
+} INSTR;
+
+/*Acao*/
+typedef enum {
+  MOVER,
+  COLETAR,
+  ATACAR
+} AC;

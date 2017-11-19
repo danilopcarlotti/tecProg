@@ -72,9 +72,18 @@ INSTR fat[] = {
 
 
 int main(int ac, char **av) {
-  Maquina *maq = cria_maquina(programa, 0);
-  Maquina *maq2 = cria_maquina(fibonacci, 1);
-  Maquina *maq3 = cria_maquina(fat, 2);
+  display = popen("./apres", "w");
+  if (display == NULL) {
+  fprintf(stderr,"Não encontrei o programa de exibição\n");
+  return 1;
+  }
+  // Ainda não escolhemos os png's dos robôs, por isso a parte ficará comentada
+  Maquina *maq = cria_maquina(programa, 0, 0, 0);
+  // fprintf(display, "rob GILEAD_1.png\n");
+  Maquina *maq2 = cria_maquina(fibonacci, 1, 1, 1);
+  // fprintf(display, "rob GILEAD_2.png\n");
+  Maquina *maq3 = cria_maquina(fat, 2, 2, 2);
+  // fprintf(display, "rob GILEAD_3.png\n");
   exec_maquina(maq, 3);
   exec_maquina(maq2, 40);
   puts("---");
@@ -85,7 +94,6 @@ int main(int ac, char **av) {
   exec_maquina(maq3, 100000);
   destroi_maquina(maq);
   destroi_maquina(maq2);
-
 /*  inicializaArena(arena);
   int i = 0;
   while(i < 3){
@@ -100,5 +108,6 @@ int main(int ac, char **av) {
   insereRobo(maq3, arena);
   Atualiza(arena);
 */
+  pclose(display);
   return 0;
 }
