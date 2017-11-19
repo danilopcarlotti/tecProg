@@ -29,7 +29,13 @@ typedef enum {
   ALC,
   FRE,
   ATR,
+<<<<<<< HEAD
   SIS
+=======
+  MOV,
+  ATQ,
+  COL
+>>>>>>> origin/otavio
 } OpCode;
 
 /* Tipos dos operandos */
@@ -48,7 +54,11 @@ typedef enum {
  	int n; 
  	int ac;
  	int v; 
+<<<<<<< HEAD
    };
+=======
+   } val;
+>>>>>>> origin/otavio
 } OPERANDO;
 
 /*terreno*/
@@ -59,12 +69,21 @@ typedef enum {
   BASE
 } Terreno;
 
+<<<<<<< HEAD
 /*Celula*/
 typedef struct {
   Terreno terreno,
   short int cristais,
   short int ocupado
 } Celula;
+=======
+/*Celula
+typedef struct {
+  Terreno terreno;
+  short int cristais;
+  short int ocupado;
+} Celula;*/
+>>>>>>> origin/otavio
 
 /* Instrução */
 typedef struct {
@@ -77,4 +96,8 @@ typedef enum {
   MOVER,
   COLETAR,
   ATACAR
+<<<<<<< HEAD
 } ACAO
+=======
+} AC;
+>>>>>>> origin/otavio
