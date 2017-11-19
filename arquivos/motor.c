@@ -92,6 +92,9 @@ int main(int ac, char **av) {
     insereExercito(arena);
     i++;
   }
+  Maquina *maq = cria_maquina(programa, 0, arena->bases[0].x, arena->bases[0].y);
+  Maquina *maq2 = cria_maquina(fibonacci, 1, arena->bases[1].x, arena->bases[1].y);
+  Maquina *maq3 = cria_maquina(fat, 2, arena->bases[2].x, arena->bases[2].y);
   insereRobo(maq, arena);
   insereRobo(maq2, arena);
   insereRobo(maq3, arena);

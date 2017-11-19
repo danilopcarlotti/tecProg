@@ -41,3 +41,5 @@ void InsereRobo(Arena *are, Maquina *m);
 void InsereExercito(Arena *are);
 
 void RemoveExercito(Maquina *m);
+
+void insereCristais(int n, int x, int y, Arena *are);

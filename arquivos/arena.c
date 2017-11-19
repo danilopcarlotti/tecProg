@@ -15,7 +15,7 @@ void inicializaMatriz(Celula ** matriz)
 		{
 			cell[j].pos[0] = i;
 			cell[j].pos[1] = j;
-			cell[j].tipoTerreno = 0;
+			cell[j].tipoTerreno = numeroAleatorio(1); // 0 - terreno plano e 1 - terreno rugoso;
 			cell[j].quantidadeDeCristais = 0;
 			cell[j].baseExercito = -1;
 			cell[j].ocupado = false;
@@ -51,6 +51,13 @@ void inicializaArena(Arena * are)
 	are->bases = malloc(6 * sizeof(Base));
 	are->quantidadeDeExercitos = 0;
 	inicializaMatriz(are->tabuleiro);
+	for (int i = 0; i < TAMANHOARENA; ++i)
+	{
+		for (int j = 0; j < TAMANHOARENA; ++j)
+		{
+			insereCristais(numeroAleatorio(4), i, j, are);
+		}
+	]
 }
 
 void InsereRobo(Arena *are, Maquina *m)
@@ -71,7 +78,13 @@ void Atualiza(Arena *are)
 {
 	int i = 0;
 	while(i <= are->quantidadeDeRobos){
+		if (are->robos[i]->ocupacao != 0) {
+		exec_maquina(are->robos[i], 0);
+		}
+		else{
 		exec_maquina(are->robos[i], 50); // percorre o vetor de maquinas e executa 50 instruçoes
+		}
+		i++;
 	}
 	are->unidadesTempo++; // atualiza a contagem do tempo
 }
@@ -128,4 +141,9 @@ void Sistema(Maquina *m, AC acao, int op){
 			break;
 	}
 
+}
+
+void insereCristais(int n, int x, int y, Arena *are)
+{
+	are->tabuleiro[x][y].quantidadeDeCristais = n;
 }
