@@ -1,6 +1,10 @@
-#include "pilha.h"
 #include "maq.h"
 #include <stdbool.h>
+
+typedef struct {
+	int x;
+	int y;
+} Base;
 
 typedef struct {
   int pos[2];
@@ -8,26 +12,34 @@ typedef struct {
   int quantidadeDeCristais;
   int baseExercito; // se é base, tem um número do exército. Se não, 0.
   bool ocupado; // se a célula está ocupada por algum robô true. Se não, false.
+  Maquina *robo;
 } Celula;
 
 typedef struct {
 	Celula ** tabuleiro;
-	int ** bases;
-	Maquina *robos; // vetor de robos na arena
+	Base* bases;
+	Maquina **robos; // vetor de robos na arena
 	int unidadesTempo; // a cada jogada, passa-se uma unidade de tempo
 	int quantidadeDeRobos;
+	int quantidadeDeExercitos;
 } Arena;
+
+Arena *arena;
 
 void inicializaArena(Arena * are);
 
 void inicializaMatriz(Celula ** matriz);
 
-void escolheBaseArena(int Exercito, int * base, Arena * are);
+void escolheBaseArena(int Exercito, Arena * are);
 
 int numeroAleatorio(int limite);
 
 void Atualiza(Arena *are);
 
-void InsereExercito(Maquina *m);
+void InsereRobo(Arena *are, Maquina *m);
+
+void InsereExercito(Arena *are);
 
 void RemoveExercito(Maquina *m);
+
+void insereCristais(int n, int x, int y, Arena *are);

@@ -10,9 +10,9 @@ typedef struct {
   INSTR *prog;
   int ip;
   int pos[2]; // posição na arena
+  int exercito; //qual exercito pertence
   int cristais; // quantidade de cristais
   int saude;
-  int exercito;
   Vizinhanca v;
   int ocupacao
 } Maquina;
@@ -26,10 +26,12 @@ typedef struct {
   int pos6[2]
 } Vizinhanca
 
-Maquina *cria_maquina(INSTR *p, int x, int y, int exercito);
+Maquina *cria_maquina(INSTR *p, int exercito, int x, int y);
 
 void destroi_maquina(Maquina *m);
 
 void exec_maquina(Maquina *m, int n);
+
+void Sistema(Maquina *m, AC acao, int op);
 
 Vizinhanca *cria_vizinhanca(int x, int y);

@@ -36,7 +36,9 @@ char *CODES[] = {
   "ALC",
   "FRE",
   "ATR",
-  "SIS"
+  "MOV",
+  "ATQ",
+  "COL"
 };
 #else
 #  define D(X)
@@ -51,12 +53,11 @@ static void Fatal(char *msg, int cod) {
   exit(cod);
 }
 
-Maquina *cria_maquina(INSTR *p, int x, int y, int exercito) {
+Maquina *cria_maquina(INSTR *p, int exercito, int x, int y) {
   Maquina *m = (Maquina*)malloc(sizeof(Maquina));
   if (!m) Fatal("Memória insuficiente",4);
   m->ip = 0;
   m->prog = p;
-  m->saude = 100;
   m->exercito = exercito;
   m->ocupacao = 0;
   m->v = cria_vizinhanca( x, y);
@@ -76,7 +77,8 @@ void destroi_maquina(Maquina *m) {
 
 void exec_maquina(Maquina *m, int n) {
   int i;
-
+  OPERANDO oip;
+  OPERANDO oip2;
   for (i = 0; i < n; i++) {
     OpCode   opc = prg[ip].instr;
     OPERANDO arg = prg[ip].op;
@@ -99,7 +101,7 @@ void exec_maquina(Maquina *m, int n) {
     case ADD:
       op1 = desempilha(pil);
       op2 = desempilha(pil);
-      if (op1.t == NUM && op2 == NUM) {
+      if (op1.t == NUM && op2.t == NUM) {
         res.t = NUM;
         res.val.n = op1.val.n + op2.val.n;
         empilha(pil, res);
@@ -108,7 +110,7 @@ void exec_maquina(Maquina *m, int n) {
     case SUB:
     op1 = desempilha(pil);
     op2 = desempilha(pil);
-    if (op1.t == NUM && op2 == NUM) {
+    if (op1.t == NUM && op2.t == NUM) {
       res.t = NUM;
       res.val.n = op1.val.n - op2.val.n;
       empilha(pil, res);
@@ -117,7 +119,7 @@ void exec_maquina(Maquina *m, int n) {
     case MUL:
     op1 = desempilha(pil);
     op2 = desempilha(pil);
-    if (op1.t == NUM && op2 == NUM) {
+    if (op1.t == NUM && op2.t == NUM) {
       res.t = NUM;
       res.val.n = op1.val.n * op2.val.n;
       empilha(pil, res);
@@ -125,137 +127,165 @@ void exec_maquina(Maquina *m, int n) {
     case DIV:
     op1 = desempilha(pil);
     op2 = desempilha(pil);
-    if (op1.t == NUM && op2 == NUM) {
+    if (op1.t == NUM && op2.t == NUM) {
       res.t = NUM;
       res.val.n = op1.val.n / op2.val.n;
       empilha(pil, res);
     }
     case JMP:
-      ip = arg;
+      ip = arg.val.n;
       continue;
     case JIT:
       tmp = desempilha(pil);
-      if (tmp.val.t == NUM){
+      if (tmp.t == NUM){
         if (desempilha(pil).val.n != 0) {
-          ip = arg;
+          ip = arg.val.n;
           continue;
         }
       }
       break;
     case JIF:
       tmp = desempilha(pil);
-      if (tmp.val.t == NUM){
+      if (tmp.t == NUM){
         if (tmp.val.n == 0) {
-        ip = arg;
+        ip = arg.val.n;
         continue;
         }
       }
       break;
     case CALL:
-      empilha(rbp, exec->topo); // empilha em rbp a posição que o endereço de retorno esta
-      empilha(exec, ip);
-      ip = arg;
+      oip.t = NUM;
+      oip.val.n = ip;
+      oip2.val.n = exec->topo;
+      empilha(rbp, oip2); // empilha em rbp a posição que o endereço de retorno esta
+      empilha(exec, oip);
+      ip = arg.val.n;
       continue;
     case RET:
-      ip = desempilha(exec);
+      ip = desempilha(exec).val.n;
       desempilha(rbp); // ajusta o rbp para a função anterior
       break;
     case EQ:
       op1 = desempilha(pil);
       op2 = desempilha(pil);
-      if (op1.val.t == NUM && op2.val.t == NUM){
-        if (op1.val.n == op2.val.n)
-          empilha(pil, 1);
-        else
-          empilha(pil, 0);
+      if (op1.t == NUM && op2.t == NUM){
+        if (op1.val.n == op2.val.n){
+          oip.val.n = 1;
+          empilha(pil, oip);
+        }
+        else{
+          oip.val.n = 0;
+          empilha(pil, oip);
+        }
       }
       break;
     case GT:
       op1 = desempilha(pil);
       op2 = desempilha(pil);
-      if (op1.val.t == NUM && op2.val.t == NUM){
-        if (op1.val.n < op2.val.n)
-          empilha(pil, 1);
-        else
-          empilha(pil, 0);
+      if (op1.t == NUM && op2.t == NUM){
+        if (op1.val.n < op2.val.n){
+        oip.val.n = 1;
+          empilha(pil, oip);
+        }
+        else{
+          oip.val.n = 0;
+          empilha(pil, oip);
+        }
       }
       break;
     case GE:
       op1 = desempilha(pil);
       op2 = desempilha(pil);
-      if (op1.val.t == NUM && op2.val.t == NUM){
-        if (op1.val.n <= op2.val.n)
-          empilha(pil, 1);
-        else
-          empilha(pil, 0);
+      if (op1.t == NUM && op2.t == NUM){
+        if (op1.val.n <= op2.val.n){
+        oip.val.n = 1;
+          empilha(pil, oip);
+        }
+        else{
+          oip.val.n = 0;
+          empilha(pil, oip);
+        }
       }
       break;
     case LT:
       op1 = desempilha(pil);
       op2 = desempilha(pil);
-      if (op1.val.t == NUM && op2.val.t == NUM){
-        if (op1.val.n > op2.val.n)
-          empilha(pil, 1);
-        else
-          empilha(pil, 0);
+      if (op1.t == NUM && op2.t == NUM){
+        if (op1.val.n > op2.val.n){
+        oip.val.n = 1;
+          empilha(pil, oip);
+        }
+        else{
+          oip.val.n = 0;
+          empilha(pil, oip);
+        }
       }
       break;
     case LE:
       op1 = desempilha(pil);
       op2 = desempilha(pil);
-      if (op1.val.t == NUM && op2.val.t == NUM){
-        if (op1.val.n >= op2.val.n)
-          empilha(pil, 1);
-        else
-          empilha(pil, 0);
+      if (op1.t == NUM && op2.t == NUM){
+        if (op1.val.n >= op2.val.n){
+          oip.val.n = 1;
+          empilha(pil, oip);
+        }
+        else{
+          oip.val.n = 0;
+          empilha(pil, oip);
+        }
       }
       break;
     case NE:
       op1 = desempilha(pil);
       op2 = desempilha(pil);
-      if (op1.val.t == NUM && op2.val.t == NUM){
-        if (op1.val.n != op2.val.n)
-          empilha(pil, 1);
-        else
-          empilha(pil, 0);
+      if (op1.t == NUM && op2.t == NUM){
+        if (op1.val.n != op2.val.n){
+          oip.val.n = 1;
+          empilha(pil, oip);
+        }
+        else{
+          oip.val.n = 0;
+          empilha(pil, oip);
+        }
       }
       break;
     case STO:
-      m->Mem[arg] = desempilha(pil);
+      m->Mem[arg.val.n] = desempilha(pil);
       break;
     case RCL:
-      empilha(pil,m->Mem[arg]);
+      empilha(pil,m->Mem[arg.val.n]);
       break;
     case END:
       return;
     case PRN:
       tmp = desempilha(pil);
-      printf("%d\n", tmp.val.t));
-      if (tmp.val.t == CELULA) {
-        printf("%d\n", ));
+      if (tmp.t == CELULA) {
       }
       break;
     case RCE:
-      empilha(pil, exec->val[rbp->val[rbp->topo - 1] + arg]);  // empilha o valor da variavel local
+      empilha(pil, exec->val[rbp->val[rbp->topo - 1].val.n + arg.val.n]);  // empilha o valor da variavel local
       break;
     case STL:
-      exec->val[rbp->val[rbp->topo - 1] + arg] = desempilha(pil); 
+      exec->val[rbp->val[rbp->topo - 1].val.n + arg.val.n] = desempilha(pil); 
       break;
     case ALC:
-      exec->topo = exec->topo + arg; // movimenta o topo da pilha de exec para aloca memoria
+      exec->topo = exec->topo + arg.val.n; // movimenta o topo da pilha de exec para aloca memoria
       break;
     case FRE:
-      exec->topo = rbp->val[rbp->topo - 1] + 1; // ajusta o topo da pilha de exec para desaloca memoria
+      exec->topo = rbp->val[rbp->topo - 1].val.n + 1; // ajusta o topo da pilha de exec para desaloca memoria
       break;
     case ATR:
       tmp = desempilha(pil);
-      empilha(pil, );
+      //empilha(pil, );
       break;
-    case SIS:
-      tmp = desempilha(pil);
-      if (tmp.val.t == ACAO) {
-
-      }
+    case MOV:
+      Sistema(m, MOVER, arg.val.n);
+      break;
+    case ATQ:
+      Sistema(m, ATACAR, arg.val.n);
+      break;
+    case COL:
+      Sistema(m, COLETAR, arg.val.n);
       break;
     }
     D(imprime(pil,5));
