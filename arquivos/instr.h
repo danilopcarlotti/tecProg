@@ -24,36 +24,30 @@ typedef enum {
   RCL,
   END,
   PRN,
-  STL,
-  RCE,
-  ALC,
-  FRE,
   ATR,
-  MOV,
-  ATQ,
-  COL
+  SIS,							/* chamada de sistema */
+  ENTRY,
+  LEAVE
 } OpCode;
 
+typedef struct {
+  int x;
+  int y;
+} Posicao;
+
 /* Tipos dos operandos */
-/* no momento, são todos inteiros */
 typedef enum {
   NUM,
   ACAO,
+  ATK,
+  MOV,
+  COL,
+  VER,
   VAR,
   CELULA
 } Tipo;
 
-/* Operando */
- typedef struct { 
-   Tipo t; 
-   union {
-  int n; 
-  int ac;
-  int v; 
-   } val;
-} OPERANDO;
-
-/*terreno*/
+/* Tipo de terreno */
 typedef enum {
   ESTRADA,
   MONTANHA,
@@ -61,22 +55,35 @@ typedef enum {
   BASE
 } Terreno;
 
-/*Celula
+
+/* Célula */
 typedef struct {
   Terreno terreno;
+  short int base;
   short int cristais;
   short int ocupado;
-} Celula;*/
+} Celula;
+
+
+/* Alternativamente, Celula pode ser implementada como um vetor de ints
+   ou short ints, isso torna a implementação de ATR mais fácil */
+
+/* No caso da ação, o tipo do operando é um inteiro indicando a direção,
+   mas fique livre para fazer de forma diferente */
+
+/* Operando */
+typedef struct {
+  Tipo t;
+  union {
+	int n;
+	int ac;
+	double v;
+	Celula cel;
+  } val;
+} OPERANDO;
 
 /* Instrução */
 typedef struct {
   OpCode instr;
   OPERANDO op;
 } INSTR;
-
-/*Acao*/
-typedef enum {
-  MOVER,
-  COLETAR,
-  ATACAR
-} AC;

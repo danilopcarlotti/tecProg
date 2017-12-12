@@ -1,169 +1,161 @@
+#include "arena.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "arena.h"
-#define TAMANHOARENA 6
 
-void insereCristais(int n, int x, int y, Arena *are)
-{
-	are->tabuleiro[x][y].quantidadeDeCristais = n;
-}
-
-void mostra_terreno(FILE *display, Celula * cell) {
-  fprintf(display, "%d %d %d \n",
-		  cell -> tipoTerreno,cell -> pos[0],cell -> pos[1]);
-}
-
-void mostra_robo(Maquina *m) {
-  fprintf(display, "%d %d %d \n",
-		  m -> exercito, m -> pos[0], m -> pos[1]);
-}
-
-void mostra_cristais(int x, int y) {
-  fprintf(display, "%d %d %d \n",
-		  99, x, y);
-}
-
-void inicializaMatriz(Celula ** matriz)
-{
-	for (int i = 0; i < TAMANHOARENA; ++i)
-	{
-		Celula * cell;
-		cell = malloc(TAMANHOARENA * sizeof(Celula));
-		matriz[i] = cell;
-		for (int j = 0; j < TAMANHOARENA; ++j)
-		{
-			cell[j].pos[0] = i;
-			cell[j].pos[1] = j;
-			cell[j].tipoTerreno = numeroAleatorio(1); // 0 - terreno plano e 1 - terreno rugoso;
-			mostra_terreno(display, cell);
-			cell[j].quantidadeDeCristais = 0;
-			cell[j].baseExercito = -1;
-			cell[j].ocupado = false;
+void iniciaArena(int tamanho) {
+	arena = malloc(sizeof(Arena));
+	Celula **tabuleiro;
+	int i,j;
+	arena->tabuleiro = malloc (tamanho * sizeof(Celula *));
+	for(i = 0; i < tamanho; i++){
+		arena->tabuleiro[i] = malloc (tamanho * sizeof(Celula)); //inicializa as celulas do tabuleiro
+		for (j = 0; j < tamanho; j++){
+			arena->tabuleiro[i][j].base = 0;
+			arena->tabuleiro[i][j].cristais = 0;
+			arena->tabuleiro[i][j].ocupado = -1;
 		}
 	}
+	arena->robos = malloc (10 * sizeof(Maquina *)); //inicializa o vetor de robos
+	arena->tempo = 0;								//inicia o tempo 
+	arena->nExercitos = 0;			
+	arena->nRobos = 0;
+	arena->tamanho = tamanho;
 }
 
-int numeroAleatorio(int limite)
-{
+void destroiArena() {
+	int i;
+	for (i = 0; i < arena->tamanho; i++)
+		free(arena->tabuleiro[i]);
+	free(arena->tabuleiro);
+	for (i = 0; i < arena->nRobos; i++)
+		destroi_maquina(arena->robos[i]);
+	free(arena->robos);
+	free(arena);
+}
+
+int numAleatorio() {
 	srand (time(NULL));
-	return rand() % limite;
+	return rand();
 }
 
-void escolheBaseArena(int exercito, Arena *are)
-{
-	int x, y;
-	x = numeroAleatorio(TAMANHOARENA);
-	y = numeroAleatorio(TAMANHOARENA);
-	if (are->tabuleiro[x][y].baseExercito < 0){
-		are->tabuleiro[x][y].baseExercito = exercito;
-		are->bases[exercito].x = x;
-		are->bases[exercito].y = y;
+void escolheBase(int exercito) {
+	int x,y;
+	x = 0; // TODO: definir a base de um outro jeito
+	y = 0;
+	arena->bases[exercito].x = x;
+	arena->bases[exercito].y = y;
+	//printf("base do exercito %d (%d,%d)\n", exercito, x, y);
+	arena->tabuleiro[x][y].base = exercito;
+}
+
+void insereExercito() {
+	if (arena->nExercitos <= 5 ) {
+		escolheBase(++arena->nExercitos);
 	}
 }
 
-void inicializaArena(Arena * are)
-{
-	are->tabuleiro = malloc(TAMANHOARENA * sizeof(Celula *));
-	are->quantidadeDeRobos = 0;
-	are->robos = malloc(100 * sizeof(Maquina *));
+void insereRobo(Maquina *m, int exercito) {
+	if (exercito <= arena->nExercitos) {
+		Posicao p;
+		arena->robos[arena->nRobos] = m;   										//insere a maquina no vetor de nRobos
+		arena->robos[arena->nRobos]->exercito = exercito;						//atribui o exercito à maquina
+		arena->robos[arena->nRobos]->vida = 10;									//atribui a vida à maquina
+		arena->robos[arena->nRobos]->cristal = 0;								//atribui o numero de cristais carregado pela maquina
+		arena->robos[arena->nRobos]->pos = arena->bases[exercito];				//atribui a posiçao do robo na base do exercito
+		arena->robos[arena->nRobos]->id = arena->nRobos;						//define o id da maquina como o indice do vetor robos
+		p = arena->robos[arena->nRobos]->pos;									//
+		arena->tabuleiro[p.x][p.y].ocupado = arena->robos[arena->nRobos]->id;	//define a posição da maquina no tabuleiro como ocupada
+		arena->nRobos++;
+		//printf("Robo %d, vida: %d, cristais: %d \n", arena->nRobos - 1, arena->robos[arena->nRobos - 1]->vida, arena->robos[arena->nRobos - 1]->cristal);
+	} else {
+		printf("ERRO: exercito %d não existe \n", exercito);
+	}
+}
+
+void removeRobo(int i) {
+	free(arena->robos[i]); 
+}
+
+void Atualiza() {
 	int i = 0;
-	are->unidadesTempo = 0;
-	are->bases = malloc(6 * sizeof(Base));
-	are->quantidadeDeExercitos = 0;
-	inicializaMatriz(are->tabuleiro);
-	for (int i = 0; i < TAMANHOARENA; ++i)
-	{
-		for (int j = 0; j < TAMANHOARENA; ++j)
-		{
-			insereCristais(numeroAleatorio(4), i, j, are);
-			mostra_cristais(i, j);
-		}
-	}
-}
-
-void InsereRobo(Arena *are, Maquina *m)
-{
-	are->robos[are->quantidadeDeRobos] = m;
-	are->quantidadeDeRobos++;
-}
-
-void InsereExercito(Arena *are) 
-{
-	if (are->quantidadeDeExercitos < 5){
-		escolheBaseArena(are->quantidadeDeExercitos, are);
-		are->quantidadeDeExercitos++;
-	}
-}
-
-void Atualiza(Arena *are)
-{
-	int i = 0;
-	while(i <= are->quantidadeDeRobos){
-		if (are->robos[i]->ocupacao != 0) {
-		exec_maquina(are->robos[i], 0);
-		}
-		else{
-		exec_maquina(are->robos[i], 50); // percorre o vetor de maquinas e executa 50 instruçoes
-		}
+	while (i < arena->nRobos) {
+		if (arena->robos[i] != NULL)
+			exec_maquina(arena->robos[i], 100);
 		i++;
 	}
-	are->unidadesTempo++; // atualiza a contagem do tempo
+	arena->tempo++;
 }
 
-void Sistema(Maquina *m, AC acao, int op){
+void Sistema(Maquina *m, OPERANDO op){
 	int x,y;
-	switch(op){
+	switch(op.val.n){  
 		case 0:
 			x = -1;
-			y = -1;
+			y = 0;
 			break;
 		case 1:
 			x = -1;
-			y = 0;
-			break;
-		case 2:
-			x = -1;
 			y = 1;
 			break;
-		case 3:
+		case 2:
 			x = 0;
 			y = 1;
 			break;
-		case 4:
-			x = -1;
+		case 3:
+			x = 1;
 			y = 0;
+			break;
+		case 4:
+			x = 1;
+			y = -1;
 			break;
 		case 5:
 			x = 0;
 			y = -1;
 			break;
 	}
-	x = m->pos[0] + x;
-	y = m->pos[1] + y;
+	x = m->pos.x + x;
+	y = m->pos.y + y;
 
-	switch(acao){
-		case MOVER:
-			if (!arena->tabuleiro[x][y].ocupado){
-				arena->tabuleiro[m->pos[0]][m->pos[1]].ocupado = false;
-				m->pos[0] = x;
-				m->pos[1] = y;
-				arena->tabuleiro[x][y].ocupado = true;
-				arena->tabuleiro[x][y].robo = m;
-				mostra_robo(m);
-			}
-			break;
-		case COLETAR:
-			if (arena->tabuleiro[x][y].quantidadeDeCristais > 0){
-				m->cristais++;
-				arena->tabuleiro[x][y].quantidadeDeCristais--;
-			}
-			// posteriormente, inserir uma checagem para saber se a arena ficou sem cristais
-			// e criar um png específico para isso
-			break;
-		case ATACAR:
+	if (x >= 0 && x < arena->tamanho && y >= 0 && y < arena->tamanho){  //x e y dentro do tabuleiro
+		switch(op.t) {
+			case ATK: 
+				printf("Ataca %d\n", op.val.n);
+				if (arena->tabuleiro[x][y].ocupado >= 0){// verifica se ha algum robo nessa pos
+					int id = arena->tabuleiro[x][y].ocupado;
+					arena->robos[id]->vida--;
+					if (arena->robos[id]->vida <= 0) 
+						removeRobo(id);
+				}
+				break;
+			case MOV:
+				if (arena->tabuleiro[x][y].ocupado < 0){ //verifica se ha alguem na nova posicao
+					printf("Move %d\n", op.val.n);
+					arena->tabuleiro[m->pos.x][m->pos.y].ocupado = -1;
+					arena->tabuleiro[x][y].ocupado = m->id;
+					m->pos.x = x;
+					m->pos.y = y;
+					printf("new pos (%d,%d)\n", m->pos.x, m->pos.y);
+				} else {
+					printf("posição ocupada %d\n", arena->tabuleiro[x][y].ocupado);
+				}
+				break;
+			case COL:
+				if (arena->tabuleiro[m->pos.x][m->pos.y].cristais > 0){
+					printf("Coleta cristal");
+					arena->tabuleiro[m->pos.x][m->pos.y].cristais--;
+					m->cristal++;
+				} else {
+					printf("Celula (%d,%d) não tem cristais\n", m->pos.x, m->pos.y);
+				}
+				break;
 
-			break;
+			case VER: //verifica se a celula (x,y) esta ocupada
+				if (arena->tabuleiro[x][y].ocupado >= 0)
+					empilha(&m->pil, (OPERANDO) {NUM, {arena->tabuleiro[x][y].ocupado}});
+				printf("verifica (%d,%d)\n", x, y);
+				break;
+		}
 	}
-
 }

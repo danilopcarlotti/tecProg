@@ -2,10 +2,10 @@ x = 34;
 y = 45;
 z = x+y;
 
-def v() {ret(43/5);}
+def v(a) {print(5*a); return(2);}
 
 if (x > 2) {
-  y = y - v();
+  y = y - v(3);
  }
 
 k = 2;

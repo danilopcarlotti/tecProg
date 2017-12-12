@@ -1,52 +1,27 @@
 #include "maq.h"
-#include <stdbool.h>
 
 typedef struct {
-	int x;
-	int y;
-} Base;
-
-typedef struct {
-  int pos[2];
-  int tipoTerreno; // plano ou rugoso (custo de saída x3)
-  int quantidadeDeCristais;
-  int baseExercito; // se é base, tem um número do exército. Se não, 0.
-  bool ocupado; // se a célula está ocupada por algum robô true. Se não, false.
-  Maquina *robo;
-} Celula;
-
-typedef struct {
-	Celula ** tabuleiro;
-	Base* bases;
+	Celula **tabuleiro;
+	Posicao bases[6];
 	Maquina **robos; // vetor de robos na arena
-	int unidadesTempo; // a cada jogada, passa-se uma unidade de tempo
-	int quantidadeDeRobos;
-	int quantidadeDeExercitos;
+	int tempo; // a cada jogada, passa-se uma unidade de tempo
+	int nRobos;
+	int nExercitos;
+	int tamanho;
 } Arena;
 
 Arena *arena;
-FILE *display;
 
-void inicializaArena(Arena * are);
+void iniciaArena(int tamanho);
 
-void inicializaMatriz(Celula ** matriz);
+void destroiArena();
 
-void escolheBaseArena(int Exercito, Arena * are);
+int numAleatorio();
 
-int numeroAleatorio(int limite);
+void escolheBase(int exercito);
 
-void Atualiza(Arena *are);
+void insereExercito();
 
-void InsereRobo(Arena *are, Maquina *m);
+void insereRobo(Maquina *m, int exercito);
 
-void InsereExercito(Arena *are);
-
-void RemoveExercito(Maquina *m);
-
-void insereCristais(int n, int x, int y, Arena *are);
-
-void mostra_terreno(FILE *display, Celula * cell);
-
-void mostra_robo(Maquina *m);
-
-void mostra_cristais(int x, int y);
+void Atualiza();

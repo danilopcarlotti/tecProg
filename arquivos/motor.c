@@ -1,113 +1,28 @@
 #include <stdio.h>
+#include "compila.tab.h"
 #include "arena.h"
 
-INSTR programa[] = {
-  {PUSH, 3},
-  {PUSH, 6},
-  {CALL, 5},
-  {PRN,  0},
-  {END,  0},
-  {ADD,  0},
-  {RET,  0}
-};
+INSTR p1[2000];
 
-INSTR fibonacci[] =  {
-  /* inicializa variáveis */
-  {PUSH,  1},  /*  0 */
-  {DUP,   0},  /*  1 */
-  {STO,   0},  /*  2 x */
-  {STO,   1},  /*  3 y */
-
-  /* for i = 10 */
-  {PUSH, 10},  /*  4 */
-  {STO,   2},  /*  5 i*/
-
-  /* início do laço */
-  {RCL,   0},  /*  6 */
-  {RCL,   1},  /*  7 y */
-  {DUP,   0},  /*  8 */
-  {STO,   0},  /*  9 x' = y */
-  {ADD,   0},  /* 10 x+y */
-  {DUP,   0},  /* 11 */
-  {STO,   1},  /* 12 y = x+y */
-  {PRN,   0},  /* 13 (x+y) */
-  {RCL,   2},  /* 14 i */
-  {PUSH,  1},  /* 15 */
-  {SUB,   0},  /* 16 */
-  {DUP,   0},  /* 17 */
-  {STO,   2},  /* 18 i = i - 1 */
-  {PUSH,  0},  /* 19 */
-  {EQ,    0},  /* 20 i == 0 ?*/
-  {JIF,   6},  /* 21 (LOOP) */
-  {END,   0},  /* 22 */
-
-};
-
-
-INSTR fat[] = {
-  {PUSH, 8},  // 0
-  {CALL, 4},  // 1
-  {PRN,  0},  // 2
-  {END,  0},  // 3
-
-  // FAT
-  {ALC,  1},  // 4
-  {DUP,  0},  // 5
-  {STL,  1},  // 6 n
-  {PUSH, 1},  // 7
-  {EQ,   0},  // 8 n == 1 ?
-  {JIF, 13},  // 9
-  {PUSH, 1},  // 10
-  {FRE,  1},  // 11
-  {RET,  0},  // 12
-  {RCE,  1},  // 13 n
-  {PUSH, 1},  // 14
-  {SUB,  0},  // 15 n-1
-  {CALL, 4},  // 16 fat(n-1)
-  {RCE,  1},  // 17 n
-  {MUL,  0},  // 18 n * fat(n-1)
-  {FRE,  1},  // 19
-  {RET,  0}   // 20
-};
-
+int compilador(FILE *, INSTR *);
 
 int main(int ac, char **av) {
-  display = popen("./apres", "w");
-  if (display == NULL) {
-  fprintf(stderr,"Não encontrei o programa de exibição\n");
-  return 1;
-  }
-  // Ainda não escolhemos os png's dos robôs, por isso a parte ficará comentada
-  Maquina *maq = cria_maquina(programa, 0, 0, 0);
-  // fprintf(display, "rob GILEAD_1.png\n");
-  Maquina *maq2 = cria_maquina(fibonacci, 1, 1, 1);
-  // fprintf(display, "rob GILEAD_2.png\n");
-  Maquina *maq3 = cria_maquina(fat, 2, 2, 2);
-  // fprintf(display, "rob GILEAD_3.png\n");
-  exec_maquina(maq, 3);
-  exec_maquina(maq2, 40);
-  puts("---");
-  exec_maquina(maq, 10);
-  puts("---");
-  exec_maquina(maq2, 10000);
-  puts("---");
-  exec_maquina(maq3, 100000);
-  destroi_maquina(maq);
-  destroi_maquina(maq2);
-/*  inicializaArena(arena);
-  int i = 0;
-  while(i < 3){
-    insereExercito(arena);
-    i++;
-  }
-  Maquina *maq = cria_maquina(programa, 0, arena->bases[0].x, arena->bases[0].y);
-  Maquina *maq2 = cria_maquina(fibonacci, 1, arena->bases[1].x, arena->bases[1].y);
-  Maquina *maq3 = cria_maquina(fat, 2, arena->bases[2].x, arena->bases[2].y);
-  insereRobo(maq, arena);
-  insereRobo(maq2, arena);
-  insereRobo(maq3, arena);
-  Atualiza(arena);
-*/
-  pclose(display);
+  FILE *p = stdin;
+  int res;
+  ac --; av++;
+  if (ac>0)
+	p = fopen(*av,"r");
+
+  res = compilador(p, p1);
+  if (res) return 1;
+
+  iniciaArena(5);
+  insereExercito();
+  Maquina *maq = cria_maquina(p1);
+  //exec_maquina(maq, 1000);
+  insereRobo(maq, 1);
+  Atualiza();
+  //destroi_maquina(maq);
+  destroiArena();
   return 0;
 }
