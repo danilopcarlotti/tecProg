@@ -120,15 +120,12 @@ for line in fileinput.input():
 
     # linha de movimentação:
     # robô, corrdenadas originais, coordenadas finais
-    ri, oi, oj, di, dj = list(map(int, r))
+    ri, oi, oj = list(map(int, r))
 
     # redesenha a célula original (apaga o robô)
     if 0 <= oi  < W and 0 <= oj < H:
         arena[oi][oj].draw()
-    # desenha o robô na célula de destino
-    if 0 <= di  < W and 0 <= dj < H and ri < len(robs):
-        robs[ri].draw(di,dj)
-
+    
     # tempo de espera para atualização, apenas para testes
     pg.time.wait(100)
 

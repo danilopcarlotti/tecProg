@@ -1,4 +1,5 @@
 #include "maq.h"
+#include <stdio.h>
 
 typedef struct {
 	Celula **tabuleiro;
@@ -22,6 +23,8 @@ void escolheBase(int exercito);
 
 void insereExercito();
 
-void insereRobo(Maquina *m, int exercito);
+void insereRobo(Maquina *m, int exercito, FILE *display);
 
 void Atualiza();
+
+void exibe_img(int ri, FILE *display, int tipo);

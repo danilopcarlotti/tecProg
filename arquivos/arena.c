@@ -1,5 +1,5 @@
-#include "arena.h"
 #include <stdio.h>
+#include "arena.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -55,7 +55,7 @@ void insereExercito() {
 	}
 }
 
-void insereRobo(Maquina *m, int exercito) {
+void insereRobo(Maquina *m, int exercito, FILE *display) {
 	if (exercito <= arena->nExercitos) {
 		Posicao p;
 		arena->robos[arena->nRobos] = m;   										//insere a maquina no vetor de nRobos
@@ -67,6 +67,7 @@ void insereRobo(Maquina *m, int exercito) {
 		p = arena->robos[arena->nRobos]->pos;									//
 		arena->tabuleiro[p.x][p.y].ocupado = arena->robos[arena->nRobos]->id;	//define a posição da maquina no tabuleiro como ocupada
 		arena->nRobos++;
+		exibe_img(arena->nRobos - 1, display, 0);
 		//printf("Robo %d, vida: %d, cristais: %d \n", arena->nRobos - 1, arena->robos[arena->nRobos - 1]->vida, arena->robos[arena->nRobos - 1]->cristal);
 	} else {
 		printf("ERRO: exercito %d não existe \n", exercito);
@@ -75,6 +76,16 @@ void insereRobo(Maquina *m, int exercito) {
 
 void removeRobo(int i) {
 	free(arena->robos[i]); 
+}
+
+void exibe_img(int ri, FILE *display, int tipo) {
+  switch(tipo){
+    case 0:
+  	  fprintf(display, "rob GILEAD_A.png\n");
+  	  break;
+  }
+  fprintf(display, "%d %d %d\n",ri, arena->robos[ri]->pos.x, arena->robos[ri]->pos.y);
+  fflush(display);
 }
 
 void Atualiza() {
