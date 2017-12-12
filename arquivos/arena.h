@@ -19,9 +19,9 @@ void destroiArena();
 
 int numAleatorio();
 
-void escolheBase(int exercito);
+void escolheBase(int exercito, FILE *display);
 
-void insereExercito();
+void insereExercito(FILE *display);
 
 void insereRobo(Maquina *m, int exercito, FILE *display);
 

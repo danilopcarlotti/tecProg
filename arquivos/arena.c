@@ -39,7 +39,7 @@ int numAleatorio() {
 	return rand();
 }
 
-void escolheBase(int exercito) {
+void escolheBase(int exercito, FILE *display) {
 	int x,y;
 	x = 0; // TODO: definir a base de um outro jeito
 	y = 0;
@@ -47,11 +47,12 @@ void escolheBase(int exercito) {
 	arena->bases[exercito].y = y;
 	//printf("base do exercito %d (%d,%d)\n", exercito, x, y);
 	arena->tabuleiro[x][y].base = exercito;
+	exibe_img(exercito, display, 2)
 }
 
-void insereExercito() {
-	if (arena->nExercitos <= 5 ) {
-		escolheBase(++arena->nExercitos);
+void insereExercito(FILE *display) {
+	if (arena->nExercitos <= 5) {
+		escolheBase(++arena->nExercitos, display);
 	}
 }
 
@@ -80,11 +81,21 @@ void removeRobo(int i) {
 
 void exibe_img(int ri, FILE *display, int tipo) {
   switch(tipo){
-    case 0:
+    case 0: // Robô
   	  fprintf(display, "rob GILEAD_A.png\n");
+  	  fprintf(display, "%d %d %d\n",ri, arena->robos[ri]->pos.x, arena->robos[ri]->pos.y);
+  	  break;
+  	case 1: //Cristais
+  	  fprintf(display, "cri cristais.png\n");
+  	  break;
+  	case 2: //Base
+  	  fprintf(display, "base base.png\n");
+  	  fprintf(display, "%d %d %d\n",ri, arena->bases[ri].x, arena->bases[ri].y);
+  	  break;
+  	case 99: //Desenha novamente a célula da arena vazia
+  	  fprintf(display, "arena\n");
   	  break;
   }
-  fprintf(display, "%d %d %d\n",ri, arena->robos[ri]->pos.x, arena->robos[ri]->pos.y);
   fflush(display);
 }
 
