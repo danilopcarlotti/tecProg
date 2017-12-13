@@ -141,7 +141,7 @@ for line in fileinput.input():
     
     else:
         try:
-            ri, oi, oj = list(map(int, r))
+            oi, oj = list(map(int, r))
             if tipo == 'rob':
                 if 0 <= oi  < W and 0 <= oj < H:
                     Robô('GILEAD_A.png').draw(oi,oj)

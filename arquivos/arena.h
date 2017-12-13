@@ -28,9 +28,9 @@ void insereRobo(Maquina *m, int exercito, FILE *display);
 
 void Atualiza(FILE *display);
 
-void exibe_robo(int ri, FILE *display);
-
 int insereCristais(int n, int x, int y, FILE *display);
+
+void exibe_robo(int x, int y, FILE *display);
 
 void exibe_cristais(int x, int y, FILE *display);
 
