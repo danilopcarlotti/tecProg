@@ -106,6 +106,8 @@ bases = []
 # atualiza a janela
 atu()
 
+tipo = ''
+
 # Leitura dos comandos pela entrada padrão ou de um arquivo
 for line in fileinput.input():
     r = line.split()
@@ -116,34 +118,51 @@ for line in fileinput.input():
 
     # linha de movimentação:
     # corrdenadas
-    ri, oi, oj = list(map(int, r))
 
     # linha começando com 'rob', inclui um robô,
     # o segundo argumento na linha é a imagem   
-    if r[0] == 'rob':
+    elif r[0] == 'rob':
+        tipo = 'rob'
         robs.append(Robô(r[1]))
-        if 0 <= oi  < W and 0 <= oj < H:
-            robs[oi][oj].draw()
         continue
 
     # linha começando com 'cri', inclui um robô,
     # o segundo argumento na linha é a imagem   
-    if r[0] == 'cri':
+    elif r[0] == 'cri':
+        tipo = 'cri'
         cristais.append(Robô(r[1]))
-        if 0 <= oi  < W and 0 <= oj < H:
-            cristais[oi][oj].draw()
         continue
 
-    if r[0] == 'base':
+    elif r[0] == 'base':
+        tipo == 'base'
         bases.append(Robô(r[1]))
-        if 0 <= oi  < W and 0 <= oj < H:
-            bases[oi][oj].draw()
         continue
 
     # redesenha a célula original
-    if r[0] == 'arena':
-        arena[oi][oj].draw()
+    elif r[0] == 'arena':
+        tipo = 'arena'
         continue
+    
+    if tipo =='arena':
+        oi, oj = list(map(int, r))
+        arena[oi][oj].draw()
+    
+    else:
+        try:
+            ri, oi, oj = list(map(int, r))
+            if tipo == 'rob':
+                if 0 <= oi  < W and 0 <= oj < H:
+                    robs[ri].draw(oi,oj)
+            elif tipo == 'cri':
+                if 0 <= oi  < W and 0 <= oj < H:
+                    cristais[ri].draw(oi,oj)
+            elif tipo == 'base':
+                if 0 <= oi  < W and 0 <= oj < H:
+                    bases[ri].draw(oi,oj)
+        except Exception as e:
+            print(e)
+
+    pg.time.wait(100)
 
     atu()
 

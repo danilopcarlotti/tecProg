@@ -47,7 +47,7 @@ void escolheBase(int exercito, FILE *display) {
 	arena->bases[exercito].y = y;
 	//printf("base do exercito %d (%d,%d)\n", exercito, x, y);
 	arena->tabuleiro[x][y].base = exercito;
-	exibe_img(exercito, display, 2);
+	exibe_img(exercito, display, 2);	
 }
 
 void insereExercito(FILE *display) {
