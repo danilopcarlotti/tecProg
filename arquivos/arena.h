@@ -13,7 +13,7 @@ typedef struct {
 
 Arena *arena;
 
-void iniciaArena(int tamanho);
+void iniciaArena(int tamanho, FILE *display);
 
 void destroiArena();
 
@@ -29,4 +29,6 @@ void Atualiza();
 
 void exibe_img(int ri, FILE *display, int tipo);
 
-int insereCristais(int n, int x, int y);
+int insereCristais(int n, int x, int y, FILE *display);
+
+void exibe_cristais(int x, int y, FILE *display);

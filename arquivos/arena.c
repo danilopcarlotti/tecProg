@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-void iniciaArena(int tamanho) {
+void iniciaArena(int tamanho, FILE *display) {
 	arena = malloc(sizeof(Arena));
 	Celula **tabuleiro;
 	int i,j;
@@ -12,7 +12,7 @@ void iniciaArena(int tamanho) {
 		arena->tabuleiro[i] = malloc (tamanho * sizeof(Celula)); //inicializa as celulas do tabuleiro
 		for (j = 0; j < tamanho; j++){
 			arena->tabuleiro[i][j].base = 0;
-			arena->tabuleiro[i][j].cristais = insereCristais(numAleatorio() % 4, i, j);
+			arena->tabuleiro[i][j].cristais = insereCristais(numAleatorio() % 4, i, j, display);
 			arena->tabuleiro[i][j].ocupado = -1;
 		}
 	}
@@ -89,17 +89,17 @@ void exibe_img(int ri, FILE *display, int tipo) {
   	  fprintf(display, "rob GILEAD_A.png\n");
   	  fprintf(display, "%d %d %d\n",ri, arena->robos[ri]->pos.x, arena->robos[ri]->pos.y);
   	  break;
-  	case 1: //Cristais
-  	  fprintf(display, "cri cristais.png\n");
-  	  break;
   	case 2: //Base
   	  fprintf(display, "base base.png\n");
   	  fprintf(display, "%d %d %d\n",ri, arena->bases[ri].x, arena->bases[ri].y);
   	  break;
-  	case 99: //Desenha novamente a célula da arena vazia
-  	  fprintf(display, "arena\n");
-  	  break;
   }
+  fflush(display);
+}
+
+void exibe_cristais(int x, int y, FILE *display) {
+  fprintf(display, "cri cristais.png\n");
+  fprintf(display, "0 %d %d\n",x, y);
   fflush(display);
 }
 
@@ -188,7 +188,11 @@ void Sistema(Maquina *m, OPERANDO op){
 		}
 	}
 }
-int insereCristais(int n, int x, int y)
+int insereCristais(int n, int x, int y, FILE *display)
 {
 	arena->tabuleiro[x][y].cristais = n;
+	if (n > 0) 
+	{
+		exibe_cristais(x, y, display);
+	}
 }

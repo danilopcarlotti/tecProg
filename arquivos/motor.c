@@ -20,7 +20,7 @@ int main(int ac, char **av) {
 	p = fopen(*av,"r");
   res = compilador(p, p1);
   if (res) return 1;
-  iniciaArena(5);
+  iniciaArena(5, display);
   insereExercito(display);
   Maquina *maq = cria_maquina(p1);
   //exec_maquina(maq, 1000);

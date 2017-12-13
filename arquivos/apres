@@ -155,7 +155,7 @@ for line in fileinput.input():
                     robs[ri].draw(oi,oj)
             elif tipo == 'cri':
                 if 0 <= oi  < W and 0 <= oj < H:
-                    cristais[ri].draw(oi,oj)
+                    cristais[0].draw(oi,oj)
             elif tipo == 'base':
                 if 0 <= oi  < W and 0 <= oj < H:
                     bases[ri].draw(oi,oj)
