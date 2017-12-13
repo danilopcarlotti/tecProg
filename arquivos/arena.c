@@ -163,7 +163,6 @@ void Sistema(Maquina *m, OPERANDO op, FILE *display){
 					arena->robos[id]->vida--;
 					if (arena->robos[id]->vida <= 0) 
 						removeRobo(id);
-						exibe_vazio(x,y, display);
 				}
 				break;
 			case MOV:
@@ -206,12 +205,13 @@ void Sistema(Maquina *m, OPERANDO op, FILE *display){
 			if (arena->tabuleiro[i][j].ocupado >= 0){
 				exibe_robo(i,j,display);
 			}
-			if ((arena->tabuleiro[i][j].base <= 0) && (arena->tabuleiro[i][j].cristais == 0) && (arena->tabuleiro[i][j].ocupado < 0)){
+			if ((arena->tabuleiro[i][j].base <= 0) && (arena->tabuleiro[i][j].cristais <= 0) && (arena->tabuleiro[i][j].ocupado < 0)){
 				exibe_vazio(i,j,display);
 			}
 		}
 	}
 }
+
 int insereCristais(int n, int x, int y, FILE *display)
 {
 	arena->tabuleiro[x][y].cristais = n;
