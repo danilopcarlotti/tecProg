@@ -32,3 +32,5 @@ void exibe_img(int ri, FILE *display, int tipo);
 int insereCristais(int n, int x, int y, FILE *display);
 
 void exibe_cristais(int x, int y, FILE *display);
+
+void exibe_base(int x, int y, FILE *display);

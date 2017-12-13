@@ -7,7 +7,7 @@ from math import *
 pg.init()                                 # inicialização do sistema
 
 # altura e largura da arena, em células
-H, W = 15,15
+H, W = 5,5
 
 # largura da célula
 l = 30
@@ -92,9 +92,9 @@ class cell:
 
 # Construção da matriz que representa a arena
 arena = []
-for i in range(15):
+for i in range(5):
     arena.append([])
-    for j in range(15):
+    for j in range(5):
         arena[i].append(cell(i,j))
         arena[i][j].draw()
 
@@ -158,7 +158,7 @@ for line in fileinput.input():
                     cristais[0].draw(oi,oj)
             elif tipo == 'base':
                 if 0 <= oi  < W and 0 <= oj < H:
-                    bases[ri].draw(oi,oj)
+                    bases[0].draw(oi,oj)
         except Exception as e:
             print(e)
 

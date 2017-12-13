@@ -35,8 +35,10 @@ void destroiArena() {
 }
 
 int numAleatorio() {
-	srand (time(NULL));
-	return rand();
+	int r;
+	r = rand();
+	printf("%d\n",r);
+	return r;
 }
 
 void escolheBase(int exercito, FILE *display) {
@@ -49,9 +51,8 @@ void escolheBase(int exercito, FILE *display) {
 	}
 	arena->bases[exercito].x = x;
 	arena->bases[exercito].y = y;
-	//printf("base do exercito %d (%d,%d)\n", exercito, x, y);
 	arena->tabuleiro[x][y].base = exercito;
-	exibe_img(exercito, display, 2);	
+	exibe_base(x, y, display);	
 }
 
 void insereExercito(FILE *display) {
@@ -89,11 +90,13 @@ void exibe_img(int ri, FILE *display, int tipo) {
   	  fprintf(display, "rob GILEAD_A.png\n");
   	  fprintf(display, "%d %d %d\n",ri, arena->robos[ri]->pos.x, arena->robos[ri]->pos.y);
   	  break;
-  	case 2: //Base
-  	  fprintf(display, "base base.png\n");
-  	  fprintf(display, "%d %d %d\n",ri, arena->bases[ri].x, arena->bases[ri].y);
-  	  break;
   }
+  fflush(display);
+}
+
+void exibe_base(int x, int y, FILE *display) {
+  fprintf(display, "base base.png\n");
+  fprintf(display, "0 %d %d\n",x, y);
   fflush(display);
 }
 
@@ -172,7 +175,7 @@ void Sistema(Maquina *m, OPERANDO op){
 				break;
 			case COL:
 				if (arena->tabuleiro[m->pos.x][m->pos.y].cristais > 0){
-					printf("Coleta cristal");
+					printf("Coleta cristal\n");
 					arena->tabuleiro[m->pos.x][m->pos.y].cristais--;
 					m->cristal++;
 				} else {
