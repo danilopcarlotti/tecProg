@@ -12,7 +12,7 @@ void iniciaArena(int tamanho) {
 		arena->tabuleiro[i] = malloc (tamanho * sizeof(Celula)); //inicializa as celulas do tabuleiro
 		for (j = 0; j < tamanho; j++){
 			arena->tabuleiro[i][j].base = 0;
-			arena->tabuleiro[i][j].cristais = 0;
+			arena->tabuleiro[i][j].cristais = insereCristais(numAleatorio() % 4, i, j);
 			arena->tabuleiro[i][j].ocupado = -1;
 		}
 	}
@@ -41,8 +41,12 @@ int numAleatorio() {
 
 void escolheBase(int exercito, FILE *display) {
 	int x,y;
-	x = 0; // TODO: definir a base de um outro jeito
-	y = 0;
+	x = numAleatorio() % arena->tamanho; 
+	y = numAleatorio() % arena->tamanho;
+	if (arena->tabuleiro[x][y].ocupado >= 0) {
+		x = numAleatorio() % arena->tamanho;
+		y = numAleatorio() % arena->tamanho;
+	}
 	arena->bases[exercito].x = x;
 	arena->bases[exercito].y = y;
 	//printf("base do exercito %d (%d,%d)\n", exercito, x, y);
@@ -92,6 +96,9 @@ void exibe_img(int ri, FILE *display, int tipo) {
   	  fprintf(display, "base base.png\n");
   	  fprintf(display, "%d %d %d\n",ri, arena->bases[ri].x, arena->bases[ri].y);
   	  break;
+  	case 99: //Desenha novamente a célula da arena vazia
+  	  fprintf(display, "arena\n");
+  	  break;
   }
   fflush(display);
 }
@@ -104,6 +111,9 @@ void Atualiza() {
 		i++;
 	}
 	arena->tempo++;
+	if (arena->nExercitos == 1) {
+		return;
+	}
 }
 
 void Sistema(Maquina *m, OPERANDO op){
@@ -136,6 +146,7 @@ void Sistema(Maquina *m, OPERANDO op){
 	}
 	x = m->pos.x + x;
 	y = m->pos.y + y;
+
 	if (x >= 0 && x < arena->tamanho && y >= 0 && y < arena->tamanho){  //x e y dentro do tabuleiro
 		switch(op.t) {
 			case ATK: 
@@ -145,7 +156,6 @@ void Sistema(Maquina *m, OPERANDO op){
 					arena->robos[id]->vida--;
 					if (arena->robos[id]->vida <= 0) 
 						removeRobo(id);
-						// desenha célula vazia!!
 				}
 				break;
 			case MOV:
@@ -153,10 +163,8 @@ void Sistema(Maquina *m, OPERANDO op){
 					printf("Move %d\n", op.val.n);
 					arena->tabuleiro[m->pos.x][m->pos.y].ocupado = -1;
 					arena->tabuleiro[x][y].ocupado = m->id;
-					// apagar a célula m->pos.x e y!!
 					m->pos.x = x;
 					m->pos.y = y;
-					// redesenho o robô!!
 					printf("new pos (%d,%d)\n", m->pos.x, m->pos.y);
 				} else {
 					printf("posição ocupada %d\n", arena->tabuleiro[x][y].ocupado);
@@ -179,4 +187,8 @@ void Sistema(Maquina *m, OPERANDO op){
 				break;
 		}
 	}
+}
+int insereCristais(int n, int x, int y)
+{
+	arena->tabuleiro[x][y].cristais = n;
 }

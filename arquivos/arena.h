@@ -28,3 +28,5 @@ void insereRobo(Maquina *m, int exercito, FILE *display);
 void Atualiza();
 
 void exibe_img(int ri, FILE *display, int tipo);
+
+int insereCristais(int n, int x, int y);
