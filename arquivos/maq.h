@@ -1,4 +1,6 @@
 #include "pilha.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #define MAXMEM 100
 #define MAXFRM 30
@@ -22,10 +24,10 @@ Maquina *cria_maquina(INSTR *p);
 
 void destroi_maquina(Maquina *m);
 
-void exec_maquina(Maquina *m, int n);
+void exec_maquina(Maquina *m, int n, FILE *display);
 
 int new_frame(Maquina *m, int pos);
 
 int del_frame(Maquina *m);
 
-void Sistema(Maquina *m, OPERANDO op);
+void Sistema(Maquina *m, OPERANDO op, FILE *display);

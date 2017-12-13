@@ -98,11 +98,6 @@ for i in range(5):
         arena[i].append(cell(i,j))
         arena[i][j].draw()
 
-# lista dos robôs definidos
-robs = []
-cristais = []
-bases = []
-
 # atualiza a janela
 atu()
 
@@ -123,19 +118,16 @@ for line in fileinput.input():
     # o segundo argumento na linha é a imagem   
     elif r[0] == 'rob':
         tipo = 'rob'
-        robs.append(Robô(r[1]))
         continue
 
     # linha começando com 'cri', inclui um robô,
     # o segundo argumento na linha é a imagem   
     elif r[0] == 'cri':
         tipo = 'cri'
-        cristais.append(Robô(r[1]))
         continue
 
     elif r[0] == 'base':
-        tipo == 'base'
-        bases.append(Robô(r[1]))
+        tipo = 'base'
         continue
 
     # redesenha a célula original
@@ -152,13 +144,13 @@ for line in fileinput.input():
             ri, oi, oj = list(map(int, r))
             if tipo == 'rob':
                 if 0 <= oi  < W and 0 <= oj < H:
-                    robs[ri].draw(oi,oj)
+                    Robô('GILEAD_A.png').draw(oi,oj)
             elif tipo == 'cri':
                 if 0 <= oi  < W and 0 <= oj < H:
-                    cristais[0].draw(oi,oj)
+                    Robô('cristais.png').draw(oi,oj)
             elif tipo == 'base':
                 if 0 <= oi  < W and 0 <= oj < H:
-                    bases[0].draw(oi,oj)
+                    Robô('base.png').draw(oi,oj)
         except Exception as e:
             print(e)
 

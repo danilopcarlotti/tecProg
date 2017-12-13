@@ -89,7 +89,7 @@ int del_frame(Maquina *m) {
 #define exec (&m->exec)
 #define prg (m->prog)
 
-void exec_maquina(Maquina *m, int n) {
+void exec_maquina(Maquina *m, int n, FILE *display) {
   int i;
 
   for (i = 0; i < n; i++) {
@@ -242,7 +242,7 @@ void exec_maquina(Maquina *m, int n) {
 
 	case SIS:
 	  arg.val.n = desempilha(pil).val.n;
-	  Sistema(m, arg);
+	  Sistema(m, arg, display);
 	  break;
 	  
 	case ENTRY:

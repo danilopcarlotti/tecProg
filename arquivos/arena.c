@@ -37,7 +37,6 @@ void destroiArena() {
 int numAleatorio() {
 	int r;
 	r = rand();
-	printf("%d\n",r);
 	return r;
 }
 
@@ -73,7 +72,7 @@ void insereRobo(Maquina *m, int exercito, FILE *display) {
 		p = arena->robos[arena->nRobos]->pos;									//
 		arena->tabuleiro[p.x][p.y].ocupado = arena->robos[arena->nRobos]->id;	//define a posição da maquina no tabuleiro como ocupada
 		arena->nRobos++;
-		exibe_img(arena->nRobos - 1, display, 0);
+		exibe_robo(arena->nRobos - 1, display);
 		//printf("Robo %d, vida: %d, cristais: %d \n", arena->nRobos - 1, arena->robos[arena->nRobos - 1]->vida, arena->robos[arena->nRobos - 1]->cristal);
 	} else {
 		printf("ERRO: exercito %d não existe \n", exercito);
@@ -84,13 +83,9 @@ void removeRobo(int i) {
 	free(arena->robos[i]); 
 }
 
-void exibe_img(int ri, FILE *display, int tipo) {
-  switch(tipo){
-    case 0: // Robô
-  	  fprintf(display, "rob GILEAD_A.png\n");
-  	  fprintf(display, "%d %d %d\n",ri, arena->robos[ri]->pos.x, arena->robos[ri]->pos.y);
-  	  break;
-  }
+void exibe_robo(int ri, FILE *display) {
+  fprintf(display, "rob GILEAD_A.png\n");
+  fprintf(display, "%d %d %d\n",ri, arena->robos[ri]->pos.x, arena->robos[ri]->pos.y);
   fflush(display);
 }
 
@@ -106,11 +101,17 @@ void exibe_cristais(int x, int y, FILE *display) {
   fflush(display);
 }
 
-void Atualiza() {
+void exibe_vazio(int x, int y, FILE *display) {
+  fprintf(display, "arena\n");
+  fprintf(display, "%d %d\n",x, y);
+  fflush(display);
+}
+
+void Atualiza(FILE *display) {
 	int i = 0;
 	while (i < arena->nRobos) {
 		if (arena->robos[i] != NULL)
-			exec_maquina(arena->robos[i], 100);
+			exec_maquina(arena->robos[i], 100, display);
 		i++;
 	}
 	arena->tempo++;
@@ -119,7 +120,7 @@ void Atualiza() {
 	}
 }
 
-void Sistema(Maquina *m, OPERANDO op){
+void Sistema(Maquina *m, OPERANDO op, FILE *display){
 	int x,y;
 	switch(op.val.n){  
 		case 0:
@@ -159,6 +160,7 @@ void Sistema(Maquina *m, OPERANDO op){
 					arena->robos[id]->vida--;
 					if (arena->robos[id]->vida <= 0) 
 						removeRobo(id);
+						exibe_vazio(x,y, display);
 				}
 				break;
 			case MOV:
