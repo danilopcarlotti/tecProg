@@ -241,6 +241,7 @@ void exec_maquina(Maquina *m, int n) {
 	  break;
 
 	case SIS:
+	  arg.val.n = desempilha(pil).val.n;
 	  Sistema(m, arg);
 	  break;
 	  

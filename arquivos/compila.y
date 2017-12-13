@@ -157,14 +157,14 @@ Func: FUNC ID
 	  }
 	  ;
 
-Acao: ATACA OPEN NUMt CLOSE EOL
-		{ prog[ip++] = (INSTR) {SIS,  {ATK, {$3}}}; }
-	| COLETA OPEN NUMt CLOSE EOL 
-		{ prog[ip++] = (INSTR) {SIS,  {COL, {$3}}}; }
-	| MOVE OPEN NUMt CLOSE EOL
-		{ prog[ip++] = (INSTR) {SIS,  {MOV, {$3}}}; }
-	| VERIFICA OPEN NUMt CLOSE EOL
-		{ prog[ip++] = (INSTR) {SIS,  {VER, {$3}}}; }
+Acao: ATACA OPEN Expr CLOSE EOL
+		{ prog[ip++] = (INSTR) {SIS,  {ATK, {0}}}; }
+	| COLETA OPEN Expr CLOSE EOL 
+		{ prog[ip++] = (INSTR) {SIS,  {COL, {0}}}; }
+	| MOVE OPEN Expr CLOSE EOL
+		{ prog[ip++] = (INSTR) {SIS,  {MOV, {0}}}; }
+	| VERIFICA OPEN Expr CLOSE EOL
+		{ prog[ip++] = (INSTR) {SIS,  {VER, {0}}}; }
 	;
 
 Args: 
