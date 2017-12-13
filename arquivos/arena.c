@@ -92,9 +92,6 @@ void exibe_img(int ri, FILE *display, int tipo) {
   	  fprintf(display, "base base.png\n");
   	  fprintf(display, "%d %d %d\n",ri, arena->bases[ri].x, arena->bases[ri].y);
   	  break;
-  	case 99: //Desenha novamente a célula da arena vazia
-  	  fprintf(display, "arena\n");
-  	  break;
   }
   fflush(display);
 }
@@ -139,7 +136,6 @@ void Sistema(Maquina *m, OPERANDO op){
 	}
 	x = m->pos.x + x;
 	y = m->pos.y + y;
-
 	if (x >= 0 && x < arena->tamanho && y >= 0 && y < arena->tamanho){  //x e y dentro do tabuleiro
 		switch(op.t) {
 			case ATK: 
@@ -149,6 +145,7 @@ void Sistema(Maquina *m, OPERANDO op){
 					arena->robos[id]->vida--;
 					if (arena->robos[id]->vida <= 0) 
 						removeRobo(id);
+						// desenha célula vazia!!
 				}
 				break;
 			case MOV:
@@ -156,8 +153,10 @@ void Sistema(Maquina *m, OPERANDO op){
 					printf("Move %d\n", op.val.n);
 					arena->tabuleiro[m->pos.x][m->pos.y].ocupado = -1;
 					arena->tabuleiro[x][y].ocupado = m->id;
+					// apagar a célula m->pos.x e y!!
 					m->pos.x = x;
 					m->pos.y = y;
+					// redesenho o robô!!
 					printf("new pos (%d,%d)\n", m->pos.x, m->pos.y);
 				} else {
 					printf("posição ocupada %d\n", arena->tabuleiro[x][y].ocupado);
