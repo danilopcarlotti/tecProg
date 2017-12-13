@@ -12,7 +12,8 @@ void iniciaArena(int tamanho, FILE *display) {
 		arena->tabuleiro[i] = malloc (tamanho * sizeof(Celula)); //inicializa as celulas do tabuleiro
 		for (j = 0; j < tamanho; j++){
 			arena->tabuleiro[i][j].base = 0;
-			arena->tabuleiro[i][j].cristais = insereCristais(numAleatorio() % 4, i, j, display);
+			int temp = numAleatorio() % 4;
+			insereCristais(temp, i, j, display);
 			arena->tabuleiro[i][j].ocupado = -1;
 		}
 	}
@@ -37,14 +38,15 @@ void destroiArena() {
 int numAleatorio() {
 	int r;
 	r = rand();
-	return r;
+	int tmp = r % 4;
+	return tmp;
 }
 
 void escolheBase(int exercito, FILE *display) {
 	int x,y;
 	x = numAleatorio() % arena->tamanho; 
 	y = numAleatorio() % arena->tamanho;
-	if (arena->tabuleiro[x][y].ocupado >= 0) {
+	while (arena->tabuleiro[x][y].ocupado >= 0) {
 		x = numAleatorio() % arena->tamanho;
 		y = numAleatorio() % arena->tamanho;
 	}
@@ -163,6 +165,7 @@ void Sistema(Maquina *m, OPERANDO op, FILE *display){
 					arena->robos[id]->vida--;
 					if (arena->robos[id]->vida <= 0) 
 						removeRobo(id);
+						exibe_vazio(x,y, display);
 				}
 				break;
 			case MOV:
@@ -205,13 +208,12 @@ void Sistema(Maquina *m, OPERANDO op, FILE *display){
 			if (arena->tabuleiro[i][j].ocupado >= 0){
 				exibe_robo(i,j,display);
 			}
-			if ((arena->tabuleiro[i][j].base <= 0) && (arena->tabuleiro[i][j].cristais <= 0) && (arena->tabuleiro[i][j].ocupado < 0)){
+			if ((arena->tabuleiro[i][j].base <= 0) && (arena->tabuleiro[i][j].cristais == 0) && (arena->tabuleiro[i][j].ocupado < 0)){
 				exibe_vazio(i,j,display);
 			}
 		}
 	}
 }
-
 int insereCristais(int n, int x, int y, FILE *display)
 {
 	arena->tabuleiro[x][y].cristais = n;

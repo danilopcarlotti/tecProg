@@ -1,0 +1,36 @@
+MAC0206 - Técnicas de Pragramação I
+
+Relatório - Parte 4(Projeto)
+
+Integrantes: 
+
+	-Otavio Ho Aragoni nº usp 9793798
+	-Danilo Carlotti nº usp 5442378
+	-Gabriel Peng nº usp 9293074
+
+Implementação:
+
+	#Finalização da parte 3 que estava faltando:
+	-A parte gráfica foi implementada;
+	-Adaptação dos arquivos da parte 3;
+		-Chamadas de sistema;
+		-Funções que faltavam na parte3;
+
+	#Parte 4:
+	-Foi completado a parte da linguagem do bison, com a implementação das variaveis especias e comandos específicos, além do "else";
+	-A gramática foi estendida, com o acrescimo dos comandos especiais.
+
+	Em específico:
+	FLEX:
+	- foram adicionados
+	- else que retorna o token ELSE no compila.y
+	- ataca que retorna ATACA
+	- move que retorna MOVE
+	- coleta que retorn COLETA
+	- verifica que retorna VERIFICA
+
+	BISON:
+	- Adicionados os tokens para as ações (ATACA, MOVE, COLETA, VERIFICA)
+	- Adicionado token ELSE
+	- Adicionado 'Acao' nas regras gramaticais para interpretar as ações
+	- Adicionado nova regra pra 'Cond' com ELSE

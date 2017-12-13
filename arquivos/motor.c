@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 #include "compila.tab.h"
 #include "arena.h"
 
@@ -9,7 +7,6 @@ INSTR p1[2000];
 int compilador(FILE *, INSTR *);
 
 int main(int ac, char **av) {
-  srand(time(NULL));
   FILE *p = stdin;
   FILE *display;
   int res;

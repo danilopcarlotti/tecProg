@@ -38,3 +38,5 @@ void exibe_base(int x, int y, FILE *display);
 
 void exibe_vazio(int x, int y, FILE *display);
 
+void Sistema(Maquina *m, OPERANDO op, FILE *display);
+
